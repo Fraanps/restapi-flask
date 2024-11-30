@@ -2,5 +2,6 @@
 
 
 * Docker
+* MongoDB
 * Flask
 * Flask-MongoEngine
