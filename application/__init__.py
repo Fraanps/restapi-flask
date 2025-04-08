@@ -4,11 +4,11 @@ from .db import init_db
 from .app import User, Users
 
 
-def create_app(config):
+def create_app(config, use_mock=False):
     app = Flask(__name__)
     api = Api(app)
     app.config.from_object(config)
-    init_db(app)
+    init_db(app, use_mock=use_mock)
 
     api.add_resource(Users, '/users')
     api.add_resource(User, '/user', '/user/<string:cpf>')

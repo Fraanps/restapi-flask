@@ -21,7 +21,10 @@ _user_parser.add_argument('birth_date', type=str, required=True,
 
 class Users(Resource):
     def get(self):
-        return jsonify(UserModel.objects())
+        return jsonify([user.to_mongo()
+                       .to_dict() for user in UserModel.objects()])
+
+        # return jsonify(UserModel.objects())
 
 
 class User(Resource):
