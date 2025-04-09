@@ -8,6 +8,9 @@ class DevConfig():
         'username': os.getenv('MONGODB_USER'),
         'password': os.getenv('MONGODB_PASSWORD'),
     }
+    
+class ProdConfig():
+    DEBUG = False
 
 
 class MockConfig:

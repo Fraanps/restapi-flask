@@ -1,6 +1,7 @@
 import pytest
 from application import create_app
 from config import MockConfig
+from urllib.parse import quote
 
 
 class TestApplication:
@@ -14,7 +15,7 @@ class TestApplication:
         return {
             "name": "Francilene",
             "last_name": "Silva",
-            "cpf": "286.324.800-65",
+            "cpf": "791.146.100-78",
             "email": "fran@gmail.com",
             "birth_date": "1994-04-08"
         }
@@ -24,7 +25,7 @@ class TestApplication:
         return {
             "name": "Francilene",
             "last_name": "Silva",
-            "cpf": "018.396.920-16",
+            "cpf": "668.480.910-4",
             "email": "fran@gmail.com",
             "birth_date": "1994-04-08"
         }
@@ -41,3 +42,14 @@ class TestApplication:
         response = client.post('/user', json=invalid_user)
         assert response.status_code == 400
         assert b"CPF is invalid" in response.data
+
+    def test_get_user(self, client, valid_user):
+        response = client.get(f'/user/{valid_user["cpf"]}')
+        assert response.status_code == 200
+        assert response.json[0]["name"] == valid_user["name"]
+        assert response.json[0]["name"] == valid_user["last_name"]
+        assert response.json[0]["name"] == valid_user["cpf"]
+        assert response.json[0]["name"] == valid_user["email"]
+        
+        birth_date = response.json[0]["birth_date"]["$date"]
+   

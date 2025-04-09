@@ -21,8 +21,13 @@ _user_parser.add_argument('birth_date', type=str, required=True,
 
 class Users(Resource):
     def get(self):
-        return jsonify([user.to_mongo()
-                       .to_dict() for user in UserModel.objects()])
+        users = []
+        for user in UserModel.objects():
+            user_dict = user.to_mongo().to_dict()
+            user_dict["_id"] = str(user_dict["_id"])  # 👈 isso aqui resolve o problema
+            users.append(user_dict)
+        
+        return jsonify(users)
 
         # return jsonify(UserModel.objects())
 
@@ -68,7 +73,13 @@ class User(Resource):
             return {'message': "CPF already exists in database!"}, 400
 
     def get(self, cpf):
+        print(f"Recebendo CPF: {cpf}")  # Adicione este log
         response = UserModel.objects(cpf=cpf)
-        if response:
-            return jsonify(response)
-        return {'message': 'User does not exist in database'}, 400
+        if response.count() > 0:
+            users = []
+            for user in response:
+                user_dict = user.to_mongo().to_dict()
+                user_dict["_id"] = str(user_dict["_id"])  # 👈 Converte o ObjectId
+                users.append(user_dict)
+            return jsonify(users)
+        return {'message': 'User does not exist in database'}, 404
